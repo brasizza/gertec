@@ -1,7 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
-import 'package:gertec_printer/core/gertec_text.dart';
+import 'package:gertec_printer/core/helpers/models/gertec_text.dart';
 
+import 'core/helpers/constants.dart';
 import 'gertec_printer_platform_interface.dart';
 
 /// An implementation of [GertecPrinterPlatform] that uses method channels.
@@ -18,7 +19,41 @@ class MethodChannelGertecPrinter extends GertecPrinterPlatform {
 
   @override
   Future<String?> printText(GertecText textObject) async {
-    final version = await methodChannel.invokeMethod<String>('printText', {'args': textObject.toMap()});
+    final version = await methodChannel.invokeMethod<String>('PRINT_TEXT', {'args': textObject.toMap()});
     return version;
+  }
+
+  @override
+  Future<void> wrapLine(int lines) async {
+    await methodChannel.invokeMethod<int>('WRAP_LINE', {"lines": lines});
+  }
+
+  @override
+  Future<int> cutPaper(CutPaperType type) async {
+    return await methodChannel.invokeMethod('CUT_PAPER', {"cut": type.value});
+  }
+
+  @override
+  Future printQrcode({required int width, required int height, required String text}) async {
+    return await methodChannel.invokeMethod('PRINT_QRCODE', {"width": width, 'height': height, 'text': text});
+  }
+
+  @override
+  Future printBarCode({required int width, required int height, required String text, required int align}) async {
+    return await methodChannel.invokeMethod('PRINT_BARCODE', {'width': width, 'height': height, 'text': text, 'align': align});
+  }
+
+  @override
+  Future printImage(Uint8List image, int align) async {
+    Map<String, dynamic> arguments = <String, dynamic>{"data": image, 'align': align};
+
+    return await methodChannel.invokeMethod('PRINT_IMAGE', arguments);
+  }
+
+  @override
+  Future<int> printRaw(Uint8List data) async {
+    Map<String, dynamic> arguments = <String, dynamic>{"data": data};
+
+    return await methodChannel.invokeMethod('PRINT_RAW', arguments);
   }
 }

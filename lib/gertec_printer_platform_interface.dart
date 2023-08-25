@@ -1,4 +1,7 @@
-import 'package:gertec_printer/core/gertec_text.dart';
+import 'dart:typed_data';
+
+import 'package:gertec_printer/core/helpers/constants.dart';
+import 'package:gertec_printer/core/helpers/models/gertec_text.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 import 'gertec_printer_method_channel.dart';
@@ -30,5 +33,29 @@ abstract class GertecPrinterPlatform extends PlatformInterface {
 
   Future<String?> printText(GertecText textObject) {
     throw UnimplementedError('platformVersion() has not been implemented.');
+  }
+
+  Future<void> wrapLine(int lines) {
+    throw UnimplementedError('wrapLine() has not been implemented.');
+  }
+
+  Future<int> cutPaper(CutPaperType type) {
+    throw UnimplementedError('cutPaper() has not been implemented.');
+  }
+
+  Future<int> printRaw(Uint8List data) {
+    throw UnimplementedError('printRaw() has not been implemented.');
+  }
+
+  Future printBarCode({required int width, required int height, required String text, required int align}) {
+    throw UnimplementedError('printBarCode() has not been implemented.');
+  }
+
+  Future printQrcode({required int width, required int height, required String text}) {
+    throw UnimplementedError('printQrcode() has not been implemented.');
+  }
+
+  Future printImage(Uint8List image, int align) {
+    throw UnimplementedError('printImage() has not been implemented.');
   }
 }

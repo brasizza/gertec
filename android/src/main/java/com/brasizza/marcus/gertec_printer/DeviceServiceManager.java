@@ -1,5 +1,6 @@
 package com.brasizza.marcus.gertec_printer;
 
+import android.annotation.SuppressLint;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -43,19 +44,19 @@ import java.lang.reflect.Method;
  * @author caixh
  */
 public class DeviceServiceManager {
-    private static final String TAG = "PriceScan/DeviceServiceManager";
 
     private static final String DEVICE_SERVICE_PACKAGE_NAME = "com.android.topwise.topusdkservice";
     private static final String DEVICE_SERVICE_CLASS_NAME = "com.android.topwise.topusdkservice.service.DeviceService";
     private static final String ACTION_DEVICE_SERVICE = "topwise_cloudpos_device_service";
 
+    @SuppressLint("StaticFieldLeak")
     private static DeviceServiceManager instance;
     private Context mContext;
     private AidlDeviceService mDeviceService;
     private boolean isBind = false;
 
     public static DeviceServiceManager getInstance() {
-        Log.d(TAG,"getInstance()");
+        Log.d("FLUTTER","getInstance()");
         if (null == instance) {
             synchronized (DeviceServiceManager.class) {
                 instance = new DeviceServiceManager();
@@ -69,7 +70,7 @@ public class DeviceServiceManager {
     }
 
     public boolean bindDeviceService(Context context) {
-        Log.i(TAG,"bindDeviceService");
+        Log.i("FLUTTER","bindDeviceService");
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             return true;
         }
@@ -80,7 +81,7 @@ public class DeviceServiceManager {
 
         try {
             boolean bindResult = mContext.bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
-            Log.i(TAG,"bindResult = " + bindResult);
+            Log.i("FLUTTER","bindResult = " + bindResult);
             return bindResult;
         } catch (Exception e) {
             e.printStackTrace();
@@ -90,14 +91,14 @@ public class DeviceServiceManager {
     }
 
     public void unBindDeviceService() {
-        Log.i(TAG,"unBindDeviceService");
+        Log.i("FLUTTER","unBindDeviceService");
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             return;
         }
         try {
             mContext.unbindService(mConnection);
         } catch (Exception e) {
-            Log.i(TAG,"unbind DeviceService service failed : " + e);
+            Log.i("FLUTTER","unbind DeviceService service failed : " + e);
         }
     }
 
@@ -106,14 +107,14 @@ public class DeviceServiceManager {
         @Override
         public void onServiceConnected(ComponentName componentName, IBinder service) {
             mDeviceService = AidlDeviceService.Stub.asInterface(service);
-            Log.d(TAG,"gz mDeviceService" + mDeviceService);
+            Log.d("FLUTTER","gz mDeviceService" + mDeviceService);
             isBind = true;
-            Log.i(TAG,"onServiceConnected  :  " + mDeviceService);
+            Log.i("FLUTTER","onServiceConnected  :  " + mDeviceService);
         }
 
         @Override
         public void onServiceDisconnected(ComponentName componentName) {
-            Log.i(TAG,"onServiceDisconnected  :  " + mDeviceService);
+            Log.i("FLUTTER","onServiceDisconnected  :  " + mDeviceService);
             mDeviceService = null;
             isBind = false;
         }
@@ -123,7 +124,7 @@ public class DeviceServiceManager {
         if(mDeviceService == null) {
             mDeviceService =  AidlDeviceService.Stub.asInterface(getService(ACTION_DEVICE_SERVICE));
         }
-        Log.i(TAG,"onServiceDisconnected  :  " + mDeviceService);
+        Log.i("FLUTTER","onServiceDisconnected  :  " + mDeviceService);
     }
 
     private static IBinder getService(String serviceName) {

@@ -1,13 +1,19 @@
 package com.brasizza.marcus.gertec_printer;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.RemoteException;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 
 import com.topwise.cloudpos.aidl.printer.AidlPrinterListener;
+import com.topwise.cloudpos.aidl.printer.PrintCuttingMode;
 import com.topwise.cloudpos.aidl.printer.PrintItemObj;
+import com.topwise.cloudpos.data.PrinterConstant;
 
+import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -52,22 +58,176 @@ public class GertecPrinterPlugin implements FlutterPlugin, MethodCallHandler {
                 result.success("Android " + android.os.Build.VERSION.RELEASE);
                 break;
 
-            case "bindPrinter":
+            case "WRAP_LINE":
+                int times = call.argument("lines");
                 try {
-                    DeviceServiceManager.getInstance().getPrintManager().getPrinterState();
+                    DeviceServiceManager.getInstance().getPrintManager().goPaper(times);
+                    result.success(1);
                 } catch (RemoteException e) {
                     e.printStackTrace();
+                    result.success(e.getMessage());
                 }
-                result.success("Android " + android.os.Build.VERSION.RELEASE);
                 break;
 
-            case "printText":
 
-                HashMap map  = call.argument("args");
+            case "PRINT_QRCODE":
+                    int widthQR = call.argument("width");
+                int heightQR = call.argument("height");
+                String textQrcode = call.argument("text");
+                try {
+
+                    DeviceServiceManager.getInstance().getPrintManager().addRuiQRCode(textQrcode, widthQR,heightQR );
+
+                    DeviceServiceManager.getInstance().getPrintManager().printRuiQueue(new AidlPrinterListener.Stub() {
+                        @Override
+                        public void onError(int i) throws RemoteException {
+                        }
+
+                        @Override
+                        public void onPrintFinish() throws RemoteException {
+
+                        }
+                    });
+                    result.success(1);
+                } catch (RemoteException e) {
+                    result.success(0);
+                    e.printStackTrace();
+                }catch (NullPointerException e) {
+                    Log.d("FLUTTER", "NullPointerException: " + e.getMessage());
+                }
+
+                break;
+
+
+
+            case "PRINT_IMAGE":
+                byte[]  dataImage = (byte[]) call.argument("data");
+                int alignImage = call.argument("align");
+                Bitmap image = byteArrayToBitmap(dataImage);
+                try {
+                    DeviceServiceManager.getInstance().getPrintManager().addRuiImage(image,alignImage);
+                    DeviceServiceManager.getInstance().getPrintManager().printRuiQueue(new AidlPrinterListener.Stub() {
+                        @Override
+                        public void onError(int i) throws RemoteException {
+                        }
+
+                        @Override
+                        public void onPrintFinish() throws RemoteException {
+
+                        }
+                    });
+                    result.success(1);
+                } catch (RemoteException e) {
+                    result.success(0);
+                    e.printStackTrace();
+                }catch (NullPointerException e) {
+                    Log.d("FLUTTER", "NullPointerException: " + e.getMessage());
+                }
+
+                break;
+
+
+            case "PRINT_BARCODE":
+                int widthBC = call.argument("width");
+                int heightBC = call.argument("height");
+                int alignBC = call.argument("align");
+                String textBC = call.argument("text");
+                try {
+                    DeviceServiceManager.getInstance().getPrintManager().addRuiBarCode(textBC, widthBC,heightBC, 1  );
+                    DeviceServiceManager.getInstance().getPrintManager().printRuiQueue(new AidlPrinterListener.Stub() {
+                        @Override
+                        public void onError(int i) throws RemoteException {
+                        }
+
+                        @Override
+                        public void onPrintFinish() throws RemoteException {
+
+                        }
+                    });
+                    result.success(1);
+                } catch (RemoteException e) {
+                    result.success(0);
+                    e.printStackTrace();
+                }catch (NullPointerException e) {
+                    Log.d("FLUTTER", "NullPointerException: " + e.getMessage());
+                }
+
+                break;
+
+            case "PRINT_RAW":
+                byte[]  data = (byte[]) call.argument("data");
+                Log.d("FLUTTER", data.toString());
+                try {
+                  int resultBuf =  DeviceServiceManager.getInstance().getPrintManager().printBuf(data);
+                    result.success(resultBuf);
+
+                } catch (RemoteException e) {
+                    result.success(0);
+                    e.printStackTrace();
+                }
+
+                break;
+
+            case "CUT_PAPER":
+                int cut = call.argument("cut");
+                try {
+                   int resultCut = DeviceServiceManager.getInstance().getPrintManager().cuttingPaper(cut == 1 ? PrintCuttingMode.CUTTING_MODE_HALT : PrintCuttingMode.CUTTING_MODE_FULL);
+                    result.success(resultCut);
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                    result.success(0);
+                }
+                break;
+
+            case "PRINTER_STATE":
+                int state = 0;
+                try {
+                   state =  DeviceServiceManager.getInstance().getPrintManager().getPrinterState();
+                } catch (RemoteException e) {
+                    result.success(0);
+                    e.printStackTrace();
+                }
+                result.success(state);
+                break;
+
+            case "PRINT_TEXT":
+                HashMap map = call.argument("args");
                 String text = (String) map.get("text");
-                List<PrintItemObj> printItems = new ArrayList<>();
-                printItems.add(new PrintItemObj(text, 20));
+                Log.d("printText - input", map.toString());
+                int fontSize = map.get("fontSize") != null ? (int) map.get("fontSize") : PrinterConstant.FontSize.NORMAL;
+                boolean bold = map.get("bold") != null ? (boolean) map.get("bold") : false;
+                boolean underline = map.get("underline") != null ? (boolean) map.get("underline") : false;
+                boolean wordwrap = map.get("wordwrap") != null ? (boolean) map.get("wordwrap") : false;
+                int letterSpacing = map.get("letterSpacing") != null ? (int) map.get("letterSpacing") : 0;
+                int marginLeft = map.get("marginLeft") != null ? (int) map.get("marginLeft") : 0;
+                int lineHeight = map.get("lineHeight") != null ? (int) map.get("lineHeight") : 29;
 
+                List<PrintItemObj> printItems = new ArrayList<>();
+                PrintItemObj printerObject = new PrintItemObj(text);
+                PrintItemObj.ALIGN align = PrintItemObj.ALIGN.LEFT;
+                if (map.get("align") != null) {
+                    switch ((int) map.get("align")) {
+                        case 0:
+                            align = PrintItemObj.ALIGN.LEFT;
+                            break;
+                        case 1:
+                            align = PrintItemObj.ALIGN.CENTER;
+                            break;
+                        case 2:
+                            align = PrintItemObj.ALIGN.RIGHT;
+
+                            break;
+                    }
+                }
+                printerObject.setLetterSpacing(letterSpacing);
+                printerObject.setLineHeight(lineHeight);
+                printerObject.setMarginLeft(marginLeft);
+                printerObject.setBold(bold);
+                printerObject.setUnderline(underline);
+                printerObject.setFontSize(fontSize);
+                printerObject.setAlign(align);
+                printerObject.setWordWrap(wordwrap);
+                printItems.add(printerObject);
                 try {
                     DeviceServiceManager.getInstance().getPrintManager().printText(printItems, new AidlPrinterListener.Stub() {
                         @Override
@@ -80,10 +240,10 @@ public class GertecPrinterPlugin implements FlutterPlugin, MethodCallHandler {
 
                         }
                     });
-                    ReturnObject returnObject = new ReturnObject("OK", "", true);
+                    ReturnObject<String> returnObject = new ReturnObject<>("OK", "", true);
                     result.success(returnObject.toJson());
                 } catch (RemoteException e) {
-                    ReturnObject returnObject = new ReturnObject(e.getMessage(), "", false);
+                    ReturnObject<String> returnObject = new ReturnObject<>(e.getMessage(), "", false);
                     result.success(returnObject.toJson());
                 }
                 break;
@@ -94,5 +254,11 @@ public class GertecPrinterPlugin implements FlutterPlugin, MethodCallHandler {
     @Override
     public void onDetachedFromEngine(@NonNull FlutterPluginBinding binding) {
         channel.setMethodCallHandler(null);
+    }
+
+
+    public Bitmap byteArrayToBitmap(byte[] byteArray) {
+        ByteArrayInputStream inputStream = new ByteArrayInputStream(byteArray);
+        return BitmapFactory.decodeStream(inputStream);
     }
 }

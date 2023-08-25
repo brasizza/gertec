@@ -35,7 +35,7 @@ android {
 
     dependencies {
         testImplementation 'junit:junit:4.13.2'
-        testImplementation 'org.mockito:mockito-core:5.0.0'
+        testImplementation 'org.mockito:mockito-core:5.1.1'
     }
 
     testOptions {
@@ -53,7 +53,7 @@ android {
         implementation 'com.google.zxing:core:3.4.1'
         implementation("androidx.appcompat:appcompat:1.6.1")
         implementation("androidx.appcompat:appcompat-resources:1.6.1")
-        implementation fileTree(include: ['*.aar','*.jar'], dir: 'libs')
+        implementation fileTree(include: ['*.jar'], dir: 'libs')
 
         implementation 'org.apache.commons:commons-lang3:3.9'
         implementation 'com.google.code.gson:gson:2.10.1'
