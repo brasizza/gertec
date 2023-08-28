@@ -1,3 +1,6 @@
+## 0.0.2
+ - Formatação de código para o score do pub.dev
+
 ## 0.0.1
 
 * Release do projeto inicial.

@@ -47,11 +47,16 @@ abstract class GertecPrinterPlatform extends PlatformInterface {
     throw UnimplementedError('printRaw() has not been implemented.');
   }
 
-  Future<String?> printBarCode({required int width, required int height, required String text, required int align}) {
+  Future<String?> printBarCode(
+      {required int width,
+      required int height,
+      required String text,
+      required int align}) {
     throw UnimplementedError('printBarCode() has not been implemented.');
   }
 
-  Future<String?> printQrcode({required int width, required int height, required String text}) {
+  Future<String?> printQrcode(
+      {required int width, required int height, required String text}) {
     throw UnimplementedError('printQrcode() has not been implemented.');
   }
 

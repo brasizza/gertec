@@ -49,7 +49,8 @@ class HomeState extends State<Home> {
 
   Future<Uint8List> readFileBytes(String path) async {
     ByteData fileData = await rootBundle.load(path);
-    Uint8List fileUnit8List = fileData.buffer.asUint8List(fileData.offsetInBytes, fileData.lengthInBytes);
+    Uint8List fileUnit8List = fileData.buffer
+        .asUint8List(fileData.offsetInBytes, fileData.lengthInBytes);
     return fileUnit8List;
   }
 
@@ -98,12 +99,14 @@ class HomeState extends State<Home> {
                   children: [
                     ElevatedButton(
                         onPressed: () async {
-                          await _gertecPrinterPlugin.printQrcode(text: 'MARCUS BRASIZZA', height: 500, width: 500);
+                          await _gertecPrinterPlugin.printQrcode(
+                              text: 'MARCUS BRASIZZA', height: 500, width: 500);
                         },
                         child: const Text('Print qrCode')),
                     ElevatedButton(
                         onPressed: () async {
-                          await _gertecPrinterPlugin.printBarCode(text: 'MARCUS BRASIZZA', width: 300);
+                          await _gertecPrinterPlugin.printBarCode(
+                              text: 'MARCUS BRASIZZA', width: 300);
                         },
                         child: const Text('Print barCode')),
                     ElevatedButton(
@@ -126,17 +129,22 @@ class HomeState extends State<Home> {
                   children: [
                     ElevatedButton(
                         onPressed: () async {
-                          await _gertecPrinterPlugin.printText(GertecText(text: 'EU AMO FLUTTER', bold: true));
+                          await _gertecPrinterPlugin.printText(
+                              GertecText(text: 'EU AMO FLUTTER', bold: true));
                         },
                         child: const Text('Bold Text')),
                     ElevatedButton(
                         onPressed: () async {
-                          await _gertecPrinterPlugin.printText(GertecText(text: 'EU AMO FLUTTER', fontSize: FontSize.SMALL));
+                          await _gertecPrinterPlugin.printText(GertecText(
+                              text: 'EU AMO FLUTTER',
+                              fontSize: FontSize.SMALL));
                         },
                         child: const Text('Small font')),
                     ElevatedButton(
                         onPressed: () async {
-                          await _gertecPrinterPlugin.printText(GertecText(text: 'EU AMO FLUTTER', fontSize: FontSize.NORMAL));
+                          await _gertecPrinterPlugin.printText(GertecText(
+                              text: 'EU AMO FLUTTER',
+                              fontSize: FontSize.NORMAL));
                         },
                         child: const Text('Normal font')),
                   ],
@@ -149,12 +157,16 @@ class HomeState extends State<Home> {
                   children: [
                     ElevatedButton(
                         onPressed: () async {
-                          await _gertecPrinterPlugin.printText(GertecText(text: 'EU AMO FLUTTER', fontSize: FontSize.LARGE));
+                          await _gertecPrinterPlugin.printText(GertecText(
+                              text: 'EU AMO FLUTTER',
+                              fontSize: FontSize.LARGE));
                         },
                         child: const Text('Large font')),
                     ElevatedButton(
                         onPressed: () async {
-                          await _gertecPrinterPlugin.printText(GertecText(text: 'EU AMO FLUTTER', fontSize: FontSize.XLARGE));
+                          await _gertecPrinterPlugin.printText(GertecText(
+                              text: 'EU AMO FLUTTER',
+                              fontSize: FontSize.XLARGE));
                         },
                         child: const Text('Very large font')),
                   ],
@@ -167,17 +179,20 @@ class HomeState extends State<Home> {
                   children: [
                     ElevatedButton(
                         onPressed: () async {
-                          await _gertecPrinterPlugin.printText(GertecText(text: 'EU AMO FLUTTER', algin: PrintAlign.LEFT));
+                          await _gertecPrinterPlugin.printText(GertecText(
+                              text: 'EU AMO FLUTTER', algin: PrintAlign.LEFT));
                         },
                         child: const Text('Align right')),
                     ElevatedButton(
                         onPressed: () async {
-                          await _gertecPrinterPlugin.printText(GertecText(text: 'EU AMO FLUTTER', algin: PrintAlign.RIGHT));
+                          await _gertecPrinterPlugin.printText(GertecText(
+                              text: 'EU AMO FLUTTER', algin: PrintAlign.RIGHT));
                         },
                         child: const Text('Align left')),
                     ElevatedButton(
                       onPressed: () async {
-                        await _gertecPrinterPlugin.printText(GertecText(text: 'EU AMO FLUTTER', algin: PrintAlign.CENTER));
+                        await _gertecPrinterPlugin.printText(GertecText(
+                            text: 'EU AMO FLUTTER', algin: PrintAlign.CENTER));
                       },
                       child: const Text('Align center'),
                     ),
@@ -191,9 +206,11 @@ class HomeState extends State<Home> {
                   children: [
                     GestureDetector(
                       onTap: () async {
-                        Uint8List byte = await _getImageFromAsset('assets/images/dash.jpeg');
+                        Uint8List byte =
+                            await _getImageFromAsset('assets/images/dash.jpeg');
 
-                        await _gertecPrinterPlugin.printImage(image: byte, align: PrintAlign.LEFT);
+                        await _gertecPrinterPlugin.printImage(
+                            image: byte, align: PrintAlign.LEFT);
                       },
                       child: Column(
                         children: [
@@ -207,13 +224,22 @@ class HomeState extends State<Home> {
                     ),
                     GestureDetector(
                       onTap: () async {
-                        String url = 'https://avatars.githubusercontent.com/u/14101776?s=100';
+                        String url =
+                            'https://avatars.githubusercontent.com/u/14101776?s=100';
                         // convert image to Uint8List format
-                        Uint8List byte = (await NetworkAssetBundle(Uri.parse(url)).load(url)).buffer.asUint8List();
-                        await _gertecPrinterPlugin.printImage(image: byte, align: PrintAlign.LEFT);
+                        Uint8List byte =
+                            (await NetworkAssetBundle(Uri.parse(url)).load(url))
+                                .buffer
+                                .asUint8List();
+                        await _gertecPrinterPlugin.printImage(
+                            image: byte, align: PrintAlign.LEFT);
                       },
                       child: Column(
-                        children: [Image.network('https://avatars.githubusercontent.com/u/14101776?s=100'), const Text('Print this image from WEB!')],
+                        children: [
+                          Image.network(
+                              'https://avatars.githubusercontent.com/u/14101776?s=100'),
+                          const Text('Print this image from WEB!')
+                        ],
                       ),
                     ),
                   ],
@@ -222,13 +248,16 @@ class HomeState extends State<Home> {
               const Divider(),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
-                  ElevatedButton(
-                      onPressed: () async {
-                        await _gertecPrinterPlugin.cutPaper(CutPaperType.FULL);
-                      },
-                      child: const Text('CUT PAPER')),
-                ]),
+                child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      ElevatedButton(
+                          onPressed: () async {
+                            await _gertecPrinterPlugin
+                                .cutPaper(CutPaperType.FULL);
+                          },
+                          child: const Text('CUT PAPER')),
+                    ]),
               ),
               // Padding(
               //   padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -262,7 +291,8 @@ class HomeState extends State<Home> {
 
 Future<Uint8List> readFileBytes(String path) async {
   ByteData fileData = await rootBundle.load(path);
-  Uint8List fileUnit8List = fileData.buffer.asUint8List(fileData.offsetInBytes, fileData.lengthInBytes);
+  Uint8List fileUnit8List = fileData.buffer
+      .asUint8List(fileData.offsetInBytes, fileData.lengthInBytes);
   return fileUnit8List;
 }
 
