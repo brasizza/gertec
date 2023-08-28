@@ -12,7 +12,11 @@ Este package tem como finalidade ajudar os desenvolvedores que precisam utilizar
 ```bash
 Gertec SK-210 
 ```
-![App funcionalities](https://github.com/brasizza/gertec/blob/master/resources/gertec_totem.png)
+
+<p align="left">
+  <img src="https://marcus.brasizza.com/imagens/gertec_totem.png"  
+  title="Totem Gertec" width="100">
+</p>
 
 
 
@@ -36,7 +40,12 @@ Gertec SK-210
 
 **Tela com as funcionalidades de exemplo**
 
-![App funcionalities](https://github.com/brasizza/gertec/blob/master/resources/print.png)
+<p align="left">
+  <img src="https://marcus.brasizza.com/imagens/gertec_example.png"  
+  title="Todas as funcionalidades">
+</p>
+
+
 
 ## Comandos básicos para conexão ##
 
