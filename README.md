@@ -12,6 +12,9 @@ Este package tem como finalidade ajudar os desenvolvedores que precisam utilizar
 ```bash
 Gertec SK-210 
 ```
+![App funcionalities](https://github.com/brasizza/gertec/blob/master/resources/gertec_totem.png)
+
+
 
 ### Portanto se você quiser ajudar a homologar mais aparelhos me contate para que possamos agilizar esse processo   
 ## O que o package faz até o momento
