@@ -39,23 +39,32 @@ abstract class GertecPrinterPlatform extends PlatformInterface {
     throw UnimplementedError('wrapLine() has not been implemented.');
   }
 
-  Future<int> cutPaper(CutPaperType type) {
+  Future<String?> cutPaper(CutPaperType type) {
     throw UnimplementedError('cutPaper() has not been implemented.');
   }
 
-  Future<int> printRaw(Uint8List data) {
+  Future<String?> printRaw(Uint8List data) {
     throw UnimplementedError('printRaw() has not been implemented.');
   }
 
-  Future printBarCode({required int width, required int height, required String text, required int align}) {
+  Future<String?> printBarCode(
+      {required int width,
+      required int height,
+      required String text,
+      required int align}) {
     throw UnimplementedError('printBarCode() has not been implemented.');
   }
 
-  Future printQrcode({required int width, required int height, required String text}) {
+  Future<String?> printQrcode(
+      {required int width, required int height, required String text}) {
     throw UnimplementedError('printQrcode() has not been implemented.');
   }
 
-  Future printImage(Uint8List image, int align) {
+  Future<String?> printImage(Uint8List image, int align) {
     throw UnimplementedError('printImage() has not been implemented.');
+  }
+
+  Future<String?> printerState() async {
+    throw UnimplementedError('printerState() has not been implemented.');
   }
 }

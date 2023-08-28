@@ -37,6 +37,18 @@ public class GertecPrinterPlugin implements FlutterPlugin, MethodCallHandler {
     private AidlPrinterListener listener;
 //  private AidlPrinter printer;
 
+
+    AidlPrinterListener mListen = new AidlPrinterListener.Stub() { @Override
+    public void onError(int i) throws RemoteException {
+
+        Log.d("FLUTTER", "onError: " + i);
+    }
+        @Override
+        public void onPrintFinish() throws RemoteException {
+
+        } };
+
+
     @Override
     public void onAttachedToEngine(@NonNull FlutterPluginBinding flutterPluginBinding) {
 //    printer = DeviceServiceManager.getInstance().getPrintManager();
@@ -55,17 +67,19 @@ public class GertecPrinterPlugin implements FlutterPlugin, MethodCallHandler {
             default:
                 result.notImplemented();
             case "getPlatformVersion":
-                result.success("Android " + android.os.Build.VERSION.RELEASE);
+                ReturnObject<String> returnObject = new ReturnObject("OK", 1, true);
+                result.success(new ReturnObject("OK", "Android " + android.os.Build.VERSION.RELEASE, true) .toJson());
                 break;
 
             case "WRAP_LINE":
                 int times = call.argument("lines");
                 try {
                     DeviceServiceManager.getInstance().getPrintManager().goPaper(times);
-                    result.success(1);
+
+                    result.success(new ReturnObject("OK", 1, true).toJson());
                 } catch (RemoteException e) {
                     e.printStackTrace();
-                    result.success(e.getMessage());
+                    result.success(new ReturnObject(e.getMessage(), "", false).toJson());
                 }
                 break;
 
@@ -77,20 +91,11 @@ public class GertecPrinterPlugin implements FlutterPlugin, MethodCallHandler {
                 try {
 
                     DeviceServiceManager.getInstance().getPrintManager().addRuiQRCode(textQrcode, widthQR,heightQR );
+                    DeviceServiceManager.getInstance().getPrintManager().printRuiQueue(mListen);
 
-                    DeviceServiceManager.getInstance().getPrintManager().printRuiQueue(new AidlPrinterListener.Stub() {
-                        @Override
-                        public void onError(int i) throws RemoteException {
-                        }
-
-                        @Override
-                        public void onPrintFinish() throws RemoteException {
-
-                        }
-                    });
-                    result.success(1);
+                    result.success(new ReturnObject("OK", 1, true).toJson());
                 } catch (RemoteException e) {
-                    result.success(0);
+                    result.success(new ReturnObject(e.getMessage(), "", false).toJson());
                     e.printStackTrace();
                 }catch (NullPointerException e) {
                     Log.d("FLUTTER", "NullPointerException: " + e.getMessage());
@@ -106,20 +111,11 @@ public class GertecPrinterPlugin implements FlutterPlugin, MethodCallHandler {
                 Bitmap image = byteArrayToBitmap(dataImage);
                 try {
                     DeviceServiceManager.getInstance().getPrintManager().addRuiImage(image,alignImage);
-                    DeviceServiceManager.getInstance().getPrintManager().printRuiQueue(new AidlPrinterListener.Stub() {
-                        @Override
-                        public void onError(int i) throws RemoteException {
-                        }
-
-                        @Override
-                        public void onPrintFinish() throws RemoteException {
-
-                        }
-                    });
-                    result.success(1);
+                    DeviceServiceManager.getInstance().getPrintManager().printRuiQueue(mListen);
+                    result.success(new ReturnObject("OK", 1, true).toJson());
                 } catch (RemoteException e) {
-                    result.success(0);
                     e.printStackTrace();
+                    result.success(new ReturnObject(e.getMessage(), "", false).toJson());
                 }catch (NullPointerException e) {
                     Log.d("FLUTTER", "NullPointerException: " + e.getMessage());
                 }
@@ -134,19 +130,10 @@ public class GertecPrinterPlugin implements FlutterPlugin, MethodCallHandler {
                 String textBC = call.argument("text");
                 try {
                     DeviceServiceManager.getInstance().getPrintManager().addRuiBarCode(textBC, widthBC,heightBC, 1  );
-                    DeviceServiceManager.getInstance().getPrintManager().printRuiQueue(new AidlPrinterListener.Stub() {
-                        @Override
-                        public void onError(int i) throws RemoteException {
-                        }
-
-                        @Override
-                        public void onPrintFinish() throws RemoteException {
-
-                        }
-                    });
-                    result.success(1);
+                    DeviceServiceManager.getInstance().getPrintManager().printRuiQueue(mListen);
+                    result.success(new ReturnObject("OK", 1, true).toJson());
                 } catch (RemoteException e) {
-                    result.success(0);
+                    result.success(new ReturnObject(e.getMessage(), "", false).toJson());
                     e.printStackTrace();
                 }catch (NullPointerException e) {
                     Log.d("FLUTTER", "NullPointerException: " + e.getMessage());
@@ -156,13 +143,13 @@ public class GertecPrinterPlugin implements FlutterPlugin, MethodCallHandler {
 
             case "PRINT_RAW":
                 byte[]  data = (byte[]) call.argument("data");
-                Log.d("FLUTTER", data.toString());
+                Log.d("PRINT_RAW", String.valueOf(data));
                 try {
                   int resultBuf =  DeviceServiceManager.getInstance().getPrintManager().printBuf(data);
-                    result.success(resultBuf);
+                    result.success(new ReturnObject("OK", resultBuf, true).toJson());
 
                 } catch (RemoteException e) {
-                    result.success(0);
+                    result.success(new ReturnObject(e.getMessage(), "", false).toJson());
                     e.printStackTrace();
                 }
 
@@ -172,10 +159,12 @@ public class GertecPrinterPlugin implements FlutterPlugin, MethodCallHandler {
                 int cut = call.argument("cut");
                 try {
                    int resultCut = DeviceServiceManager.getInstance().getPrintManager().cuttingPaper(cut == 1 ? PrintCuttingMode.CUTTING_MODE_HALT : PrintCuttingMode.CUTTING_MODE_FULL);
-                    result.success(resultCut);
+
+
+                    result.success(new ReturnObject("OK", resultCut, true).toJson());
                 } catch (RemoteException e) {
                     e.printStackTrace();
-                    result.success(0);
+                    result.success(new ReturnObject(e.getMessage(), "", false).toJson());
                 }
                 break;
 
@@ -183,11 +172,12 @@ public class GertecPrinterPlugin implements FlutterPlugin, MethodCallHandler {
                 int state = 0;
                 try {
                    state =  DeviceServiceManager.getInstance().getPrintManager().getPrinterState();
+                    result.success(new ReturnObject("OK", state, true).toJson());
                 } catch (RemoteException e) {
-                    result.success(0);
+                    result.success(new ReturnObject(e.getMessage(), "", false).toJson());
                     e.printStackTrace();
                 }
-                result.success(state);
+
                 break;
 
             case "PRINT_TEXT":
@@ -229,22 +219,10 @@ public class GertecPrinterPlugin implements FlutterPlugin, MethodCallHandler {
                 printerObject.setWordWrap(wordwrap);
                 printItems.add(printerObject);
                 try {
-                    DeviceServiceManager.getInstance().getPrintManager().printText(printItems, new AidlPrinterListener.Stub() {
-                        @Override
-                        public void onError(int i) throws RemoteException {
-
-                        }
-
-                        @Override
-                        public void onPrintFinish() throws RemoteException {
-
-                        }
-                    });
-                    ReturnObject<String> returnObject = new ReturnObject<>("OK", "", true);
-                    result.success(returnObject.toJson());
+                    DeviceServiceManager.getInstance().getPrintManager().printText(printItems,mListen);
+                    result.success(new ReturnObject("OK", "", true).toJson());
                 } catch (RemoteException e) {
-                    ReturnObject<String> returnObject = new ReturnObject<>(e.getMessage(), "", false);
-                    result.success(returnObject.toJson());
+                    result.success(new ReturnObject(e.getMessage(), "", true).toJson());
                 }
                 break;
         }
