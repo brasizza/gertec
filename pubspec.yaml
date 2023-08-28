@@ -1,7 +1,7 @@
 name: gertec_printer
-description: A new Flutter plugin project.
+description: Gertec package to help to print in SK120 device with a lot of features
 version: 0.0.1
-homepage:
+homepage: https://github.com/brasizza/gertec
 
 environment:
   sdk: '>=3.0.5 <4.0.0'
