@@ -1,4 +1,4 @@
-package com.brasizza.marcus.gertec_printer;
+package com.brasizza.marcus.gertec;
 
 import android.annotation.SuppressLint;
 import android.content.ComponentName;

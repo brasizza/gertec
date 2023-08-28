@@ -1,4 +1,4 @@
-package com.brasizza.marcus.gertec_printer;
+package com.brasizza.marcus.gertec;
 import com.google.gson.Gson;
 
 
