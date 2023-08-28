@@ -29,11 +29,10 @@ Gertec SK-210
 
 
 
+
 **Tela com as funcionalidades de exemplo**
-<p align="left">
-  <img src="https://marcus.brasizza.com/imagens/example-elgin.png"  
-  title="Todas as funcionalidades">
-</p>
+
+![App funcionalities](https://github.com/brasizza/gertec/blob/master/resources/print.png)
 
 ## Comandos básicos para conexão ##
 
