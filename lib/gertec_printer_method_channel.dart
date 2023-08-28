@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
-import 'package:gertec_printer/core/helpers/models/gertec_text.dart';
+import 'package:gertec/core/helpers/models/gertec_text.dart';
 
 import 'core/helpers/constants.dart';
 import 'gertec_printer_platform_interface.dart';
@@ -13,15 +13,13 @@ class MethodChannelGertecPrinter extends GertecPrinterPlatform {
 
   @override
   Future<String?> getPlatformVersion() async {
-    final version =
-        await methodChannel.invokeMethod<String>('getPlatformVersion');
+    final version = await methodChannel.invokeMethod<String>('getPlatformVersion');
     return version;
   }
 
   @override
   Future<String?> printText(GertecText textObject) async {
-    final version = await methodChannel
-        .invokeMethod<String>('PRINT_TEXT', {'args': textObject.toMap()});
+    final version = await methodChannel.invokeMethod<String>('PRINT_TEXT', {'args': textObject.toMap()});
     return version;
   }
 
@@ -36,28 +34,18 @@ class MethodChannelGertecPrinter extends GertecPrinterPlatform {
   }
 
   @override
-  Future<String?> printQrcode(
-      {required int width, required int height, required String text}) async {
-    return await methodChannel.invokeMethod(
-        'PRINT_QRCODE', {"width": width, 'height': height, 'text': text});
+  Future<String?> printQrcode({required int width, required int height, required String text}) async {
+    return await methodChannel.invokeMethod('PRINT_QRCODE', {"width": width, 'height': height, 'text': text});
   }
 
   @override
-  Future<String?> printBarCode(
-      {required int width,
-      required int height,
-      required String text,
-      required int align}) async {
-    return await methodChannel.invokeMethod('PRINT_BARCODE',
-        {'width': width, 'height': height, 'text': text, 'align': align});
+  Future<String?> printBarCode({required int width, required int height, required String text, required int align}) async {
+    return await methodChannel.invokeMethod('PRINT_BARCODE', {'width': width, 'height': height, 'text': text, 'align': align});
   }
 
   @override
   Future<String?> printImage(Uint8List image, int align) async {
-    Map<String, dynamic> arguments = <String, dynamic>{
-      "data": image,
-      'align': align
-    };
+    Map<String, dynamic> arguments = <String, dynamic>{"data": image, 'align': align};
 
     return await methodChannel.invokeMethod('PRINT_IMAGE', arguments);
   }

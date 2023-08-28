@@ -2,9 +2,9 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:gertec_printer/core/helpers/constants.dart';
-import 'package:gertec_printer/core/helpers/models/gertec_text.dart';
-import 'package:gertec_printer/gertec_printer.dart';
+import 'package:gertec/core/helpers/constants.dart';
+import 'package:gertec/core/helpers/models/gertec_text.dart';
+import 'package:gertec/gertec_printer.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

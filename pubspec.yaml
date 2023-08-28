@@ -1,4 +1,4 @@
-name: gertec_printer
+name: gertec
 description: Gertec package to help to print in SK120 device with a lot of features
 version: 0.0.1
 homepage: https://github.com/brasizza/gertec
@@ -35,7 +35,7 @@ flutter:
   plugin:
     platforms:
       android:
-        package: com.brasizza.marcus.gertec_printer
+        package: com.brasizza.marcus.gertec
         pluginClass: GertecPrinterPlugin
 
   # To add assets to your plugin package, add an assets section, like this:

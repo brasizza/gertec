@@ -14,8 +14,9 @@ Gertec SK-210
 ```
 
 ### Portanto se você quiser ajudar a homologar mais aparelhos me contate para que possamos agilizar esse processo   
-## O que o package faz até o momento  (além de conectar e desconectar a impressora)
+## O que o package faz até o momento
 
+# IMPRESSORA
 - [x] Escreve uma linha ou um texto estilizado (tipos de estilo no final do readme) -  **printText**
 - [x] Avança x linhas à sua escolha - **wrap**
 - [x] Faz o corte de papel - **cutPaper**
@@ -52,8 +53,6 @@ Gertec SK-210
 
 
 ```dart
-  ///*ElginError
-///
 ///Where in the barcode the text will be show
 enum PrinterState {
   PRINTER_STATE_NORMAL(0),
@@ -120,7 +119,6 @@ enum PrintAlign {
 
 
 
-<details>
 
 
 <details>
