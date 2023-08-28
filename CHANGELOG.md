@@ -1,3 +1,6 @@
+## 0.0.3
+ - Correção do readme para colocar as imagens.
+
 ## 0.0.2
  - Formatação de código para o score do pub.dev
 
