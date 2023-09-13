@@ -1,3 +1,6 @@
+## 0.0.6
+    - Melhorias no stub de leitura do qrcode/barcode
+
 ## 0.0.5
     - README fix e imagens
     - Atualização para receber suporte ao leitor de código de barras/ QrCode abaixo do dispositivo, somente ativo (mediante a execução para iniciar a captura)
