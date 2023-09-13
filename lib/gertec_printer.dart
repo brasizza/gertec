@@ -27,6 +27,11 @@ class GertecPrinter {
         await GertecPrinterPlatform.instance.printRaw(data) ?? '{}');
   }
 
+  Future<GertecResponse> readCamera() async {
+    return GertecResponse.fromJson(
+        await GertecPrinterPlatform.instance.readCamera() ?? '{}');
+  }
+
   Future<GertecResponse> printBarCode(
       {int width = 200,
       int height = 60,

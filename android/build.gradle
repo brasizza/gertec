@@ -54,6 +54,7 @@ android {
         implementation("androidx.appcompat:appcompat:1.6.1")
         implementation("androidx.appcompat:appcompat-resources:1.6.1")
         implementation fileTree(include: ['*.jar'], dir: 'libs')
+        compileOnly fileTree(include: ['*.aar'], dir: 'libs')
 
         implementation 'org.apache.commons:commons-lang3:3.9'
         implementation 'com.google.code.gson:gson:2.10.1'

@@ -46,6 +46,7 @@ class HomeState extends State<Home> {
   String serialNumber = "";
   String printerVersion = "";
   final _gertecPrinterPlugin = GertecPrinter();
+  String textScan = 'Text scanned';
 
   Future<Uint8List> readFileBytes(String path) async {
     ByteData fileData = await rootBundle.load(path);
@@ -89,6 +90,12 @@ class HomeState extends State<Home> {
                         printBinded = PrinterState.PRINTER_STATE_NORMAL;
                       }
                     });
+                  },
+                  child: const Text('check state')),
+
+              ElevatedButton(
+                  onPressed: () async {
+                    await _gertecPrinterPlugin.getPlatformVersion();
                   },
                   child: const Text('check state')),
               const Divider(),
@@ -245,7 +252,6 @@ class HomeState extends State<Home> {
                   ],
                 ),
               ),
-              const Divider(),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: Row(
@@ -257,6 +263,37 @@ class HomeState extends State<Home> {
                                 .cutPaper(CutPaperType.FULL);
                           },
                           child: const Text('CUT PAPER')),
+                    ]),
+              ),
+              const Divider(),
+              const Text(
+                "Scanner",
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30),
+              ),
+              Text(
+                "$textScan",
+                style: TextStyle(fontSize: 20),
+              ),
+
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      ElevatedButton(
+                          onPressed: () async {
+                            final cameraData =
+                                await _gertecPrinterPlugin.readCamera();
+                            setState(() {
+                              if (cameraData.success == true) {
+                                textScan = (cameraData.content as String?) ??
+                                    'Fail to read, try again';
+                              } else {
+                                textScan = 'Fail to read, try again';
+                              }
+                            });
+                          },
+                          child: const Text('Read barcode/qrcode')),
                     ]),
               ),
               // Padding(

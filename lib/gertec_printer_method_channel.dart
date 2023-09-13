@@ -73,4 +73,9 @@ class MethodChannelGertecPrinter extends GertecPrinterPlatform {
   Future<String?> printerState() async {
     return await methodChannel.invokeMethod('PRINTER_STATE');
   }
+
+  @override
+  Future<String?> readCamera() async {
+    return await methodChannel.invokeMethod('READ_CAMERA');
+  }
 }

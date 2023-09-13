@@ -1,3 +1,6 @@
+## 0.0.4
+ - Atualização para receber suporte ao leitor de código de barras/ QrCode abaixo do dispositivo, somente ativo (mediante a execução para iniciar a captura)
+
 ## 0.0.3
  - Correção do readme para colocar as imagens.
 
@@ -13,9 +16,9 @@ Implementação inicial e testada somente em ** SK210 **
 - [x] Faz o corte de papel - **cutPaper**
 - [x] Imprime códigos de barras de todos os estilos e modelos (tipos de modelos no final do readme) - **printBarCode**
 - [x] Imprime qrcodes com todos os tipos de correções e tamanhos - **printQrcode**
-- [ ] Envia comando escpos diretamente para impressora, caso você já tenha um script de escpos é só utilizar este comando  - **printRaw**
 - [x] Desenha uma linha com o caractere customizável para separar áreas de impressão  - **line**
 - [x] Imprime uma imagem tanto vinda da web quanto de algum asset (ver exemplo) - **printImage**
 - [x] Pega e status da impressora (tipos disponíveis no final do readme)
+
 
 

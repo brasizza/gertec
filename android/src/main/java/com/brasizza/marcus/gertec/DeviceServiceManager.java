@@ -1,15 +1,6 @@
 package com.brasizza.marcus.gertec;
 
-import android.annotation.SuppressLint;
-import android.content.ComponentName;
-import android.content.Context;
-import android.content.Intent;
-import android.content.ServiceConnection;
-import android.os.Build;
-import android.os.Bundle;
-import android.os.IBinder;
-import android.os.RemoteException;
-import android.util.Log;
+import java.lang.reflect.Method;
 
 import com.topwise.cloudpos.aidl.AidlDeviceService;
 import com.topwise.cloudpos.aidl.buzzer.AidlBuzzer;
@@ -38,7 +29,14 @@ import com.topwise.cloudpos.aidl.shellmonitor.AidlShellMonitor;
 import com.topwise.cloudpos.aidl.system.AidlSystem;
 import com.topwise.cloudpos.aidl.tm.AidlTM;
 
-import java.lang.reflect.Method;
+import android.annotation.SuppressLint;
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.ServiceConnection;
+import android.os.Bundle;
+import android.os.IBinder;
+import android.os.RemoteException;
+import android.util.Log;
 
 /**
  * @author caixh
@@ -56,6 +54,7 @@ public class DeviceServiceManager {
     private boolean isBind = false;
 
     public static DeviceServiceManager getInstance() {
+
         Log.d("FLUTTER","getInstance()");
         if (null == instance) {
             synchronized (DeviceServiceManager.class) {
@@ -69,45 +68,44 @@ public class DeviceServiceManager {
         return isBind;
     }
 
-    public boolean bindDeviceService(Context context) {
-        Log.i("FLUTTER","bindDeviceService");
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            return true;
-        }
-        this.mContext = context;
-        Intent intent = new Intent();
-        intent.setAction(ACTION_DEVICE_SERVICE);
-        intent.setClassName(DEVICE_SERVICE_PACKAGE_NAME, DEVICE_SERVICE_CLASS_NAME);
-
-        try {
-            boolean bindResult = mContext.bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
-            Log.i("FLUTTER","bindResult = " + bindResult);
-            return bindResult;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return false;
-    }
-
-    public void unBindDeviceService() {
-        Log.i("FLUTTER","unBindDeviceService");
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            return;
-        }
-        try {
-            mContext.unbindService(mConnection);
-        } catch (Exception e) {
-            Log.i("FLUTTER","unbind DeviceService service failed : " + e);
-        }
-    }
+//    public boolean bindDeviceService(Context context) {
+//        Log.i("FLUTTER","bindDeviceService");
+//        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//            return true;
+//        }
+//        this.mContext = context;
+//        Intent intent = new Intent();
+//        intent.setAction(ACTION_DEVICE_SERVICE);
+//        intent.setClassName(DEVICE_SERVICE_PACKAGE_NAME, DEVICE_SERVICE_CLASS_NAME);
+//
+//        try {
+//            boolean bindResult = mContext.bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+//            Log.i("FLUTTER","bindResult = " + bindResult);
+//            return bindResult;
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//
+//        return false;
+//    }
+//
+//    public void unBindDeviceService() {
+//        Log.i("FLUTTER","unBindDeviceService");
+//        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//            return;
+//        }
+//        try {
+//            mContext.unbindService(mConnection);
+//        } catch (Exception e) {
+//            Log.i("FLUTTER","unbind DeviceService service failed : " + e);
+//        }
+//    }
 
     private final ServiceConnection mConnection = new ServiceConnection() {
 
         @Override
         public void onServiceConnected(ComponentName componentName, IBinder service) {
             mDeviceService = AidlDeviceService.Stub.asInterface(service);
-            Log.d("FLUTTER","gz mDeviceService" + mDeviceService);
             isBind = true;
             Log.i("FLUTTER","onServiceConnected  :  " + mDeviceService);
         }
@@ -120,17 +118,17 @@ public class DeviceServiceManager {
         }
     };
 
-    public void getDeviceService() {
+    public void getDeviceService(Context context) {
         if(mDeviceService == null) {
-            mDeviceService =  AidlDeviceService.Stub.asInterface(getService(ACTION_DEVICE_SERVICE));
+            mDeviceService =  AidlDeviceService.Stub.asInterface(getService(context , ACTION_DEVICE_SERVICE));
         }
         Log.i("FLUTTER","onServiceDisconnected  :  " + mDeviceService);
     }
 
-    private static IBinder getService(String serviceName) {
+    private static IBinder getService(Context context, String serviceName) {
         IBinder binder = null;
         try {
-            ClassLoader cl = PriceScanApplication.getContext().getClassLoader();
+            ClassLoader cl = context.getClassLoader();
             Class serviceManager = cl.loadClass("android.os.ServiceManager");
             Class[] paramTypes = new Class[1];
             paramTypes[0] = String.class;
@@ -145,9 +143,9 @@ public class DeviceServiceManager {
     }
 
 
-    public AidlSystem getSystemManager() {
+    public AidlSystem getSystemManager(Context context) {
         try {
-            getDeviceService();
+            getDeviceService(context);
             if (mDeviceService != null) {
                 return AidlSystem.Stub.asInterface(mDeviceService.getSystemService());
             }
@@ -157,9 +155,9 @@ public class DeviceServiceManager {
         return null;
     }
 
-    public AidlBuzzer getBuzzer() {
+    public AidlBuzzer getBuzzer(Context context) {
         try {
-            getDeviceService();
+            getDeviceService(context);
             if (mDeviceService != null) {
                 return AidlBuzzer.Stub.asInterface(mDeviceService.getBuzzer());
             }
@@ -169,9 +167,9 @@ public class DeviceServiceManager {
         return null;
     }
 
-    public AidlDecoderManager getDecoder() {
+    public AidlDecoderManager getDecoder(Context context) {
         try {
-            getDeviceService();
+            getDeviceService(context);
             if (mDeviceService != null) {
                 return AidlDecoderManager.Stub.asInterface(mDeviceService.getDecoder());
             }
@@ -181,9 +179,9 @@ public class DeviceServiceManager {
         return null;
     }
 
-    public AidlLed getLed() {
+    public AidlLed getLed(Context context) {
         try {
-            getDeviceService();
+            getDeviceService(context);
             if (mDeviceService != null) {
                 return AidlLed.Stub.asInterface(mDeviceService.getLed());
             }
@@ -193,9 +191,9 @@ public class DeviceServiceManager {
         return null;
     }
 
-    public AidlPinpad getPinpadManager(int devid) {
+    public AidlPinpad getPinpadManager(Context context, int devid) {
         try {
-            getDeviceService();
+            getDeviceService(context);
             if (mDeviceService != null) {
                 return AidlPinpad.Stub.asInterface(mDeviceService.getPinPad(devid));
             }
@@ -205,9 +203,9 @@ public class DeviceServiceManager {
         return null;
     }
 
-    public AidlPrinter getPrintManager() {
+    public AidlPrinter getPrintManager(Context context) {
         try {
-            getDeviceService();
+            getDeviceService(context);
             if (mDeviceService != null) {
                 return AidlPrinter.Stub.asInterface(mDeviceService.getPrinter());
             }
@@ -217,9 +215,9 @@ public class DeviceServiceManager {
         return null;
     }
 
-    public AidlTM getAidlTM() {
+    public AidlTM getAidlTM(Context context) {
         try {
-            getDeviceService();
+            getDeviceService(context);
             if (mDeviceService != null) {
                 return AidlTM.Stub.asInterface(mDeviceService.getTM());
             }
@@ -230,9 +228,9 @@ public class DeviceServiceManager {
     }
 
 
-    public AidlICCard getICCardReader() {
+    public AidlICCard getICCardReader(Context context) {
         try {
-            getDeviceService();
+            getDeviceService(context);
             if (mDeviceService != null) {
                 return AidlICCard.Stub.asInterface(mDeviceService.getInsertCardReader());
             }
@@ -242,9 +240,9 @@ public class DeviceServiceManager {
         return null;
     }
 
-    public AidlRFCard getRfCardReader() {
+    public AidlRFCard getRfCardReader(Context context) {
         try {
-            getDeviceService();
+            getDeviceService(context);
             if (mDeviceService != null) {
                 return AidlRFCard.Stub.asInterface(mDeviceService.getRFIDReader());
             }
@@ -254,9 +252,9 @@ public class DeviceServiceManager {
         return null;
     }
 
-    public AidlPsam getPsamCardReader(int devid) {
+    public AidlPsam getPsamCardReader(Context context, int devid) {
         try {
-            getDeviceService();
+            getDeviceService(context);
             if (mDeviceService != null) {
                 return AidlPsam.Stub.asInterface(mDeviceService.getPSAMReader(devid));
             }
@@ -266,9 +264,9 @@ public class DeviceServiceManager {
         return null;
     }
 
-    public AidlMagCard getMagCardReader() {
+    public AidlMagCard getMagCardReader(Context context) {
         try {
-            getDeviceService();
+            getDeviceService(context);
             if (mDeviceService != null) {
                 return AidlMagCard.Stub.asInterface(mDeviceService.getMagCardReader());
             }
@@ -278,9 +276,9 @@ public class DeviceServiceManager {
         return null;
     }
 
-    public AidlCPUCard getCPUCardReader() {
+    public AidlCPUCard getCPUCardReader(Context context) {
         try {
-            getDeviceService();
+            getDeviceService(context);
             if (mDeviceService != null) {
                 return AidlCPUCard.Stub.asInterface(mDeviceService.getCPUCard());
             }
@@ -290,9 +288,9 @@ public class DeviceServiceManager {
         return null;
     }
 
-    public AidlSerialport getSerialPort(int port) {
+    public AidlSerialport getSerialPort( Context context,  int port) {
         try {
-            getDeviceService();
+            getDeviceService(context);
             if (mDeviceService != null) {
                 return AidlSerialport.Stub.asInterface(mDeviceService.getSerialPort(port));
             }
@@ -302,9 +300,9 @@ public class DeviceServiceManager {
         return null;
     }
 
-    public AidlShellMonitor getShellMonitor() {
+    public AidlShellMonitor getShellMonitor(Context context) {
         try {
-            getDeviceService();
+            getDeviceService(context);
             if (mDeviceService != null) {
                 return AidlShellMonitor.Stub.asInterface(mDeviceService.getShellMonitor());
             }
@@ -314,9 +312,9 @@ public class DeviceServiceManager {
         return null;
     }
 
-    public AidlPedestal getPedestal() {
+    public AidlPedestal getPedestal(Context context ) {
         try {
-            getDeviceService();
+            getDeviceService(context);
             if (mDeviceService != null) {
                 return AidlPedestal.Stub.asInterface(mDeviceService.getPedestal());
             }
@@ -326,9 +324,9 @@ public class DeviceServiceManager {
         return null;
     }
 
-    public AidlEmvL2 getEmvL2() {
+    public AidlEmvL2 getEmvL2(Context context) {
         try {
-            getDeviceService();
+            getDeviceService(context);
             if (mDeviceService != null) {
                 return AidlEmvL2.Stub.asInterface(mDeviceService.getL2Emv());
             }
@@ -338,9 +336,9 @@ public class DeviceServiceManager {
         return null;
     }
 
-    public AidlPure getL2Pure() {
+    public AidlPure getL2Pure(Context context) {
         try {
-            getDeviceService();
+            getDeviceService(context);
             if (mDeviceService != null) {
                 return AidlPure.Stub.asInterface(mDeviceService.getL2Pure());
             }
@@ -350,9 +348,9 @@ public class DeviceServiceManager {
         return null;
     }
 
-    public AidlPaypass getL2Paypass() {
+    public AidlPaypass getL2Paypass(Context context) {
         try {
-            getDeviceService();
+            getDeviceService(context);
             if (mDeviceService != null) {
                 return AidlPaypass.Stub.asInterface(mDeviceService.getL2Paypass());
             }
@@ -362,9 +360,9 @@ public class DeviceServiceManager {
         return null;
     }
 
-    public AidlPaywave getL2Paywave() {
+    public AidlPaywave getL2Paywave(Context context) {
         try {
-            getDeviceService();
+            getDeviceService(context);
             if (mDeviceService != null) {
                 return AidlPaywave.Stub.asInterface(mDeviceService.getL2Paywave());
             }
@@ -374,9 +372,9 @@ public class DeviceServiceManager {
         return null;
     }
 
-    public AidlEntry getL2Entry() {
+    public AidlEntry getL2Entry(Context context) {
         try {
-            getDeviceService();
+            getDeviceService(context);
             if (mDeviceService != null) {
                 return AidlEntry.Stub.asInterface(mDeviceService.getL2Entry());
             }
@@ -386,9 +384,9 @@ public class DeviceServiceManager {
         return null;
     }
 
-    public AidlAmex getL2Amex() {
+    public AidlAmex getL2Amex(Context context) {
         try {
-            getDeviceService();
+            getDeviceService(context);
             if (mDeviceService != null) {
                 return AidlAmex.Stub.asInterface(mDeviceService.getL2Amex());
             }
@@ -398,9 +396,9 @@ public class DeviceServiceManager {
         return null;
     }
 
-    public AidlQpboc getL2Qpboc() {
+    public AidlQpboc getL2Qpboc(Context context) {
         try {
-            getDeviceService();
+            getDeviceService(context);
             if (mDeviceService != null) {
                 return AidlQpboc.Stub.asInterface(mDeviceService.getL2Qpboc());
             }
@@ -410,9 +408,9 @@ public class DeviceServiceManager {
         return null;
     }
 
-    public AidlCameraScanCode getCameraManager() {
+    public AidlCameraScanCode getCameraManager(Context context) {
         try {
-            getDeviceService();
+            getDeviceService(context);
             if (mDeviceService != null) {
                 return AidlCameraScanCode.Stub.asInterface(mDeviceService.getCameraManager());
             }
@@ -422,9 +420,9 @@ public class DeviceServiceManager {
         return null;
     }
 
-    public Bundle expandFunction(Bundle param) {
+    public Bundle expandFunction( Context context,  Bundle param) {
         try {
-            getDeviceService();
+            getDeviceService(context);
             if (mDeviceService != null) {
                 return mDeviceService.expandFunction(param);
             }
@@ -435,9 +433,9 @@ public class DeviceServiceManager {
     }
 
     // zhongfeiyu add pm by 2022/1/11 @{
-    public AidlPM getPm() {
+    public AidlPM getPm(Context context ) {
         try {
-            getDeviceService();
+            getDeviceService(context);
             if (mDeviceService != null) {
                 return AidlPM.Stub.asInterface(mDeviceService.getPM());
             }
@@ -449,9 +447,9 @@ public class DeviceServiceManager {
     // @}
 
     //finger detect
-    public AidlFingerprint getFingerprint(){
+    public AidlFingerprint getFingerprint(Context context){
         try {
-            getDeviceService();
+            getDeviceService(context);
             if (mDeviceService != null) {
                 return AidlFingerprint.Stub.asInterface(mDeviceService.getFingerprint());
             }
