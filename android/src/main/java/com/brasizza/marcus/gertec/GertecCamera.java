@@ -20,7 +20,7 @@ public class GertecCamera extends Application {
     private final Context context;
     private final AidlCameraScanCode camera;
     private DecodeParameter decodeParameter;
-    private String decoded;
+    private String decoded = "";
     private final AidlPrinterListener mListen = new AidlPrinterListener.Stub() {
         @Override
         public void onError(int i) throws RemoteException {
@@ -43,28 +43,36 @@ public class GertecCamera extends Application {
 
 
     public void decode() {
-
-        AidlDecodeCallBack mDecodeResult;
-        mDecodeResult = new AidlDecodeCallBack.Stub() {
+        
+        this.decoded = "";
+        DecodeParameter decodeParameter = new DecodeParameter();
+        decodeParameter.setDecodeMode(DecodeMode.MODE_SINGLE_SCAN_CODE).setDecodeIntervalTime(2000).setFlashLightTimeout(2000);
+        try {
+            camera.startDecode(decodeParameter, new AidlDecodeCallBack.Stub() {
             @Override
             public void onResult(String s) throws RemoteException {
+
+                Log.d("FLUTTER", "onResult: " + s);
+
+
                 setDecoded(s);
             }
             @Override
             public void onError(int i) throws RemoteException {
-            }
-        };
+                Log.d("FLUTTER", "onError: " + i);
 
-        DecodeParameter decodeParameter = new DecodeParameter();
-        decodeParameter.setDecodeMode(DecodeMode.MODE_SINGLE_SCAN_CODE).setDecodeIntervalTime(2000).setFlashLightTimeout(2000);
-        try {
-            camera.startDecode(decodeParameter, mDecodeResult);
+            }
+        });
         } catch (RemoteException e) {
             e.printStackTrace();
+            Log.d("FLUTTER", "onError: " + e.getMessage());
+
             try {
                 camera.stopDecode();
             } catch (RemoteException f) {
-                e.printStackTrace();
+              f.printStackTrace();
+                Log.d("FLUTTER", "onError: " + f.getMessage());
+
             }
         }
     }
