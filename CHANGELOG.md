@@ -1,3 +1,6 @@
+## 0.0.7
+    - Atualização do  SDK do SK210 (Não estou utilizando a easy-layer, e sim a SDK nativa do aparelho)
+
 ## 0.0.6
     - Melhorias no stub de leitura do qrcode/barcode
 

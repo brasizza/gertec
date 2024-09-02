@@ -22,11 +22,16 @@ rootProject.allprojects {
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion 33
+    compileSdkVersion 34
+
+     tasks.withType(JavaCompile) {
+        options.compilerArgs << "-Xlint:deprecation"
+    }
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
+
     }
 
     defaultConfig {

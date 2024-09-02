@@ -17,6 +17,9 @@ import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 /**
  * GertecPrinterPlugin
@@ -33,6 +36,8 @@ public class GertecPrinterPlugin implements FlutterPlugin, MethodCallHandler {
 
 
     @Override
+
+    @SuppressWarnings("unchecked")
     public void onAttachedToEngine(@NonNull FlutterPluginBinding flutterPluginBinding) {
         channel = new MethodChannel(flutterPluginBinding.getBinaryMessenger(), "gertec_printer");
         channel.setMethodCallHandler(this);
@@ -43,6 +48,7 @@ public class GertecPrinterPlugin implements FlutterPlugin, MethodCallHandler {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public void onMethodCall(@NonNull MethodCall call, @NonNull Result result) {
         switch (call.method) {
             default:
@@ -151,8 +157,8 @@ public class GertecPrinterPlugin implements FlutterPlugin, MethodCallHandler {
 
                 break;
 
-            case "PRINT_TEXT":
-                HashMap map = call.argument("args");
+                case "PRINT_TEXT":
+                HashMap<String, Object> map = call.argument("args");
                 try {
                     printer.printText(map);
                     result.success(new ReturnObject("OK", "", true).toJson());
@@ -161,31 +167,35 @@ public class GertecPrinterPlugin implements FlutterPlugin, MethodCallHandler {
                 }
                 break;
 
-            case "READ_CAMERA":
+                case "READ_CAMERA":
                 camera.decode();
-                new Handler().postDelayed(new Runnable() {
+                ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
+                scheduler.schedule(new Runnable() {
+                    @Override
                     public void run() {
                         final String resultCamera = camera.getDecoded();
-                        if(resultCamera == "") {
+                        if (resultCamera == null || resultCamera.isEmpty()) {
                             result.success(new ReturnObject("", "", false).toJson());
-                        }else{
-                            result.success(new ReturnObject("OK", camera.getDecoded(), true).toJson());
+                        } else {
+                            result.success(new ReturnObject("OK", resultCamera, true).toJson());
                         }
                         camera.stopScan();
                     }
-                }, 2000);
-
+                }, 2, TimeUnit.SECONDS);
                 break;
+            
+
         }
     }
 
 
     @Override
+    @SuppressWarnings("unchecked")
     public void onDetachedFromEngine(@NonNull FlutterPluginBinding binding) {
         channel.setMethodCallHandler(null);
     }
 
-
+    @SuppressWarnings("unchecked")
     public Bitmap byteArrayToBitmap(byte[] byteArray) {
         ByteArrayInputStream inputStream = new ByteArrayInputStream(byteArray);
         return BitmapFactory.decodeStream(inputStream);
