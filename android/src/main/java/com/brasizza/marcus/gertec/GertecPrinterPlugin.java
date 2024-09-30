@@ -33,7 +33,8 @@ public class GertecPrinterPlugin implements FlutterPlugin, MethodCallHandler {
     private Context context;
     private GertecPrinter printer;
     private GertecCamera camera;
-
+    private Boolean cutPaper = false;
+    private Integer cutType = 0;
 
     @Override
 
@@ -53,6 +54,17 @@ public class GertecPrinterPlugin implements FlutterPlugin, MethodCallHandler {
         switch (call.method) {
             default:
                 result.notImplemented();
+
+
+            case "START_TRANSACTION" :
+                printer.startTransaction();
+                result.success(new ReturnObject("OK", "START TRANSACTION", true).toJson());
+                break;
+            case "PRINT_BUFFER":
+                printer.printBuffer(cutPaper,cutType);
+               
+                result.success(new ReturnObject("OK", "START TRANSACTION", true).toJson());
+                break;
             case "getPlatformVersion":
                 result.success(new ReturnObject("OK", "Android " + android.os.Build.VERSION.RELEASE, true).toJson());
                 break;
@@ -135,9 +147,15 @@ public class GertecPrinterPlugin implements FlutterPlugin, MethodCallHandler {
 
             case "CUT_PAPER":
                 int cut = call.argument("cut");
+                int resultCut = 0;
                 try {
-
-                    int resultCut = printer.cutPaper(cut);
+                    if(printer.inTransaction){
+                        cutPaper  = true;
+                        cutType = cut;
+                        resultCut = 1;
+                    }else{
+                     resultCut = printer.cutPaper(cut);
+                    }
                     result.success(new ReturnObject("OK", resultCut, true).toJson());
                 } catch (RemoteException e) {
                     e.printStackTrace();

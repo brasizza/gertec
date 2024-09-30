@@ -25,12 +25,12 @@ public class GertecCamera extends Application {
         @Override
         public void onError(int i) throws RemoteException {
 
-            Log.d("FLUTTER", "onError: " + i);
+            Log.d("debug", "onError: " + i);
         }
 
         @Override
         public void onPrintFinish() throws RemoteException {
-
+            Log.d("debug", "Printer Finished");
         }
     };
 
@@ -51,27 +51,24 @@ public class GertecCamera extends Application {
             camera.startDecode(decodeParameter, new AidlDecodeCallBack.Stub() {
             @Override
             public void onResult(String s) throws RemoteException {
-
-                Log.d("FLUTTER", "onResult: " + s);
-
-
+                Log.d("debug", "onResult: " + s);
                 setDecoded(s);
             }
             @Override
             public void onError(int i) throws RemoteException {
-                Log.d("FLUTTER", "onError: " + i);
+                Log.d("debug", "onError: " + i);
 
             }
         });
         } catch (RemoteException e) {
             e.printStackTrace();
-            Log.d("FLUTTER", "onError: " + e.getMessage());
+            Log.d("debug", "onError: " + e.getMessage());
 
             try {
                 camera.stopDecode();
             } catch (RemoteException f) {
               f.printStackTrace();
-                Log.d("FLUTTER", "onError: " + f.getMessage());
+                Log.d("debug", "onError: " + f.getMessage());
 
             }
         }
