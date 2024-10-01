@@ -26,7 +26,7 @@ Gertec SK-210
 ```
 
 <p align="left">
-  <img src="https://jacodouhoje.dev/wp-content/uploads/2024/10/sk-210.webp"  
+  <img src="./resources/gertec_totem.png"  
   title="Totem Gertec" width="200">
 </p>
 
