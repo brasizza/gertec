@@ -1,7 +1,19 @@
 # gertec
-<h1> Package para trabalhar com os componentes da gertec <strong>SOMENTE em ANDROID! </strong></h1>
+# Package para trabalhar com os componentes da gertec <strong>SOMENTE em ANDROID! 
 
 
+# IMPORTANTE!!!!!
+Devida a compilaçāo em release mode, é necessário colocar essas diretivas no seu gradle na parte de release
+
+```gradle
+ buildTypes {
+    release {
+        signingConfig = signingConfigs.debug
+        minifyEnabled false // <<False para minificacao >>
+        shrinkResources false  // <<False para shrink >>
+    }
+}
+```
 # Iniciando
 **Por mais que o código esteja em inglês, o readme e o CHANGELOG estarão em português para facilitar o entendimento**
 
@@ -14,8 +26,8 @@ Gertec SK-210
 ```
 
 <p align="left">
-  <img src="https://marcus.brasizza.com/imagens/gertec_totem.png"  
-  title="Totem Gertec" width="100">
+  <img src="https://jacodouhoje.dev/wp-content/uploads/2024/10/sk-210.webp"  
+  title="Totem Gertec" width="200">
 </p>
 
 
@@ -29,7 +41,6 @@ Gertec SK-210
 - [ x ] Faz o corte de papel - **cutPaper**
 - [ x ] Imprime códigos de barras de todos os estilos e modelos (tipos de modelos no final do readme) - **printBarCode**
 - [ x ] Imprime qrcodes com todos os tipos de correções e tamanhos - **printQrcode**
-- ~~[ ] Envia comando escpos diretamente para impressora, caso você já tenha um script de escpos é só utilizar este comando~~   - **printRaw**  (Estou aguardando a nova versão do SDK)
 - [ x ] Desenha uma linha com o caractere customizável para separar áreas de impressão  - **line**
 - [ x ] Imprime uma imagem tanto vinda da web quanto de algum asset (ver exemplo) - **printImage**
 - [ x ] Pega e status da impressora (tipos disponíveis no final do readme)
@@ -44,7 +55,7 @@ Gertec SK-210
 ![PRINT](./resources/print.png)
 
 
-## Comandos básicos para conexão ##
+## Comandos básicos para impressão direta ##
 
 ```dart
     final  _gertecPrinterPlugin = GertecPrinter();
@@ -53,6 +64,21 @@ Gertec SK-210
     await _gertecPrinterPlugin.cutPaper();
     
    
+```
+
+## Comandos básicos para impressao em buffer##
+
+```dart
+    final  _gertecPrinterPlugin = GertecPrinter();
+    await _gertecPrinterPlugin.startTransaction();
+    await _gertecPrinterPlugin.printText('HELLO PRINTER');
+    await _gertecPrinterPlugin.printText('HELLO PRINTER');
+    await _gertecPrinterPlugin.printText('HELLO PRINTER');
+    await _gertecPrinterPlugin.printQrcode(text: 'RECIBO DE PAGAMENTO TESTE', height: 300, width: 200);
+    await _gertecPrinterPlugin.wrapLine(2);
+    await _gertecPrinterPlugin.cutPaper();
+    await _gertecPrinterPlugin.finishTransaction();
+    
 ```
 ## Listagem de configurações disponíveis
 

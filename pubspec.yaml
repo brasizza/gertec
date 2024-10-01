@@ -1,6 +1,6 @@
 name: gertec
 description: Gertec package to help to print in SK120 device with a lot of features
-version: 0.0.7
+version: 0.0.8
 homepage: https://github.com/brasizza/gertec
 
 environment:
