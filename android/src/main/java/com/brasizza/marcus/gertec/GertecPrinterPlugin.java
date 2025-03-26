@@ -9,6 +9,8 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import com.topwise.cloudpos.aidl.camera.DecodeMode;
+
 import java.io.ByteArrayInputStream;
 import java.util.HashMap;
 
@@ -20,6 +22,7 @@ import io.flutter.plugin.common.MethodChannel.Result;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import com.topwise.cloudpos.aidl.camera.DecodeMode;
 
 /**
  * GertecPrinterPlugin
@@ -54,8 +57,6 @@ public class GertecPrinterPlugin implements FlutterPlugin, MethodCallHandler {
         switch (call.method) {
             default:
                 result.notImplemented();
-
-
             case "START_TRANSACTION" :
                 printer.startTransaction();
                 result.success(new ReturnObject("OK", "START TRANSACTION", true).toJson());
@@ -185,8 +186,9 @@ public class GertecPrinterPlugin implements FlutterPlugin, MethodCallHandler {
                 }
                 break;
 
-                case "READ_CAMERA":
-                camera.decode();
+            case "READ_CAMERA":
+                int decodeMode = call.argument("decodeMode");
+                camera.decode(decodeMode);
                 ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
                 scheduler.schedule(new Runnable() {
                     @Override
@@ -197,10 +199,14 @@ public class GertecPrinterPlugin implements FlutterPlugin, MethodCallHandler {
                         } else {
                             result.success(new ReturnObject("OK", resultCamera, true).toJson());
                         }
-                        camera.stopScan();
+                        if(decodeMode == DecodeMode.MODE_SINGLE_SCAN_CODE.getMode()) camera.stopScan();
                     }
                 }, 2, TimeUnit.SECONDS);
-                break;
+            break;
+
+            case "STOP_CAMERA":
+                camera.stopScan();
+            break;
             
 
         }

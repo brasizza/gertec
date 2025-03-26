@@ -68,8 +68,13 @@ abstract class GertecPrinterPlatform extends PlatformInterface {
     throw UnimplementedError('printerState() has not been implemented.');
   }
 
-  Future<String?> readCamera() async {
-    throw UnimplementedError('printerState() has not been implemented.');
+  Future<String?> readCamera(
+      {DecodeMode decodeMode = DecodeMode.MODE_SINGLE_SCAN_CODE}) async {
+    throw UnimplementedError('readCamera() has not been implemented.');
+  }
+
+  Future<String?> stopCamera() async {
+    throw UnimplementedError('stopCamera() has not been implemented.');
   }
 
   Future<String?> startTransaction() async {

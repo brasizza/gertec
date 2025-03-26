@@ -37,9 +37,16 @@ class GertecPrinter {
         await GertecPrinterPlatform.instance.printRaw(data) ?? '{}');
   }
 
-  Future<GertecResponse> readCamera() async {
+  Future<GertecResponse> readCamera(
+      {DecodeMode decodeMode = DecodeMode.MODE_SINGLE_SCAN_CODE}) async {
+    return GertecResponse.fromJson(await GertecPrinterPlatform.instance
+            .readCamera(decodeMode: decodeMode) ??
+        '{}');
+  }
+
+  Future<GertecResponse> stopCamera() async {
     return GertecResponse.fromJson(
-        await GertecPrinterPlatform.instance.readCamera() ?? '{}');
+        await GertecPrinterPlatform.instance.stopCamera() ?? '{}');
   }
 
   Future<GertecResponse> printBarCode(

@@ -42,11 +42,10 @@ public class GertecCamera extends Application {
     }
 
 
-    public void decode() {
-        
+    public void decode(int decodeMode) {
         this.decoded = "";
         DecodeParameter decodeParameter = new DecodeParameter();
-        decodeParameter.setDecodeMode(DecodeMode.MODE_SINGLE_SCAN_CODE).setDecodeIntervalTime(2000).setFlashLightTimeout(2000);
+        decodeParameter.setDecodeMode(GetDecodeMode(decodeMode)).setDecodeIntervalTime(2000).setFlashLightTimeout(2000);
         try {
             camera.startDecode(decodeParameter, new AidlDecodeCallBack.Stub() {
             @Override
@@ -72,6 +71,12 @@ public class GertecCamera extends Application {
 
             }
         }
+    }
+
+    private DecodeMode GetDecodeMode(int decodeMode) {
+        if(decodeMode == 0) return DecodeMode.MODE_SINGLE_SCAN_CODE;
+        if(decodeMode == 1) return DecodeMode.MODE_CONTINUE_SCAN_CODE;
+        return DecodeMode.MODE_DEFAULT;
     }
 
     public void stopScan(){
