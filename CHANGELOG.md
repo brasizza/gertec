@@ -1,3 +1,6 @@
+## 0.0.9
+- Adicionar parâmetro para informar o modo de decodo do scanner;
+
 ## 0.0.8
     - Inclusão de um processo em buffer, pois a impressao de QRcode e Barcode nao segue a mesma fila de impressao, e se vc mandasse tudo ao mesmo tempo, o texto as vezes imprimia no meio do qrcode
 # Importante
