@@ -288,7 +288,9 @@ class HomeState extends State<Home> {
                       ElevatedButton(
                           onPressed: () async {
                             final cameraData =
-                                await _gertecPrinterPlugin.readCamera();
+                                await _gertecPrinterPlugin.readCamera(
+                                    decodeMode:
+                                        DecodeMode.MODE_CONTINUE_SCAN_CODE);
                             setState(() {
                               if (cameraData.success == true) {
                                 textScan = (cameraData.content as String?) ??
@@ -299,6 +301,27 @@ class HomeState extends State<Home> {
                             });
                           },
                           child: const Text('Read barcode/qrcode')),
+                    ]),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      ElevatedButton(
+                          onPressed: () async {
+                            final cameraData =
+                                await _gertecPrinterPlugin.stopCamera();
+                            setState(() {
+                              if (cameraData.success == true) {
+                                textScan = (cameraData.content as String?) ??
+                                    'Fail to stop, try again';
+                              } else {
+                                textScan = 'Fail to stop, try again';
+                              }
+                            });
+                          },
+                          child: const Text('Stop barcode/qrcode')),
                     ]),
               ),
             ],

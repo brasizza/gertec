@@ -60,3 +60,12 @@ enum FontSize {
   final int value;
   const FontSize(this.value);
 }
+
+enum DecodeMode {
+  MODE_DEFAULT(-1),
+  MODE_SINGLE_SCAN_CODE(0),
+  MODE_CONTINUE_SCAN_CODE(1);
+
+  final int value;
+  const DecodeMode(this.value);
+}

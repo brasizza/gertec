@@ -89,7 +89,14 @@ class MethodChannelGertecPrinter extends GertecPrinterPlatform {
   }
 
   @override
-  Future<String?> readCamera() async {
-    return await methodChannel.invokeMethod('READ_CAMERA');
+  Future<String?> readCamera(
+      {DecodeMode decodeMode = DecodeMode.MODE_SINGLE_SCAN_CODE}) async {
+    return await methodChannel
+        .invokeMethod('READ_CAMERA', {"decodeMode": decodeMode.value});
+  }
+
+  @override
+  Future<String?> stopCamera() async {
+    return await methodChannel.invokeMethod('STOP_CAMERA');
   }
 }
