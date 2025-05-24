@@ -1,10 +1,8 @@
-## 0.0.10
-    - Adicionado um metodo da camera do scan ser continua ou somente uma leitura
-    - Correcao do namespace do gradle para versoes mais novas do flutter!
 
 ## 0.0.9
-- Adicionar parâmetro para informar o modo de decode ao iniciar o scanner;
+- Adicionar parâmetro para informar o modo de decode ao iniciar o scanner; [https://github.com/CarvalhoWesley](CarvalhoWesley)
 - Adicionar método parar a leitura do scanner;
+ - Correcao do namespace do gradle para versoes mais novas do flutter!
 
 ## 0.0.8
     - Inclusão de um processo em buffer, pois a impressao de QRcode e Barcode nao segue a mesma fila de impressao, e se vc mandasse tudo ao mesmo tempo, o texto as vezes imprimia no meio do qrcode
