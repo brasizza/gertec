@@ -1,3 +1,7 @@
+## 0.0.10
+    - Adicionado um metodo da camera do scan ser continua ou somente uma leitura
+    - Correcao do namespace do gradle para versoes mais novas do flutter!
+
 ## 0.0.9
 - Adicionar parâmetro para informar o modo de decode ao iniciar o scanner;
 - Adicionar método parar a leitura do scanner;

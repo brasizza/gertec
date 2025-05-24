@@ -44,9 +44,24 @@ public class GertecPrinter extends Application {
     }
 
     public int wrapLine(int times) throws RemoteException {
-        printer.goPaper(times);
-        return 1;
+        List<PrintItemObj> printItems = new ArrayList<>();
+        PrintItemObj printerObject = new PrintItemObj("");
+        printerObject.setLetterSpacing(0);
+        printerObject.setLineHeight(0);
+        printerObject.setMarginLeft(0);
+        printerObject.setBold(false);
+        printerObject.setUnderline(false);
+        printerObject.setFontSize(0);
+        printerObject.setWordWrap(false);
+        for (int i = 0; i < times; i++) {
+            printItems.add(printerObject);
+        }
+        printer.addRuiText(printItems);
+        if (!inTransaction) {
+            printer.printRuiQueue(mListen);
+        }
 
+        return 1;
     }
 
     public void printQRcode(String textQrcode, int widthQR, int heightQR) throws RemoteException {
@@ -156,8 +171,8 @@ public class GertecPrinter extends Application {
                 @Override
                 public void onPrintFinish() throws RemoteException {
                     Log.d("DEBUG", "Terminou bufffer");
+                    wrapLine(2);
                     if(canCut){
-
                         cutPaper(cutType);
                     }
                 }

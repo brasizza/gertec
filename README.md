@@ -25,11 +25,7 @@ Este package tem como finalidade ajudar os desenvolvedores que precisam utilizar
 Gertec SK-210 
 ```
 
-<p align="left">
-  <img src="./resources/gertec_totem.png"  
-  title="Totem Gertec" width="200">
-</p>
-
+![PRINT](./resources/gertec_totem.png)
 
 
 ### Portanto se você quiser ajudar a homologar mais aparelhos me contate para que possamos agilizar esse processo   
